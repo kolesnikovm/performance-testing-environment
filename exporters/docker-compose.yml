@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 8080:8080
+    deploy:
+      # replicas: 2
+      mode: global
+
+  node_exporter:
+    image: prom/node-exporter
+    user: root
+    volumes:
+      - '/:/host:ro'
+    command:
+      - '--path.rootfs=/host'
+    ports:
+      - 9100:9100
+    deploy:
+      mode: global
